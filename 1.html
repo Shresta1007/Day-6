@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A responsive 2026 Ganapathi route guide for Hyderabad, Hanamkonda and Warangal.">
+	<title>Vighnaraja 2026 | Hyderabad x Hanamkonda x Warangal</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--ink: #25131c;
+			--saffron: #f06b27;
+			--sun: #ffc857;
+			--rose: #c83e68;
+			--cream: #fff6e9;
+			--lavender: #eadcff;
+			--muted: #745f65;
+			--line: rgba(71, 37, 43, .14);
+			--shadow: 0 20px 60px rgba(97, 45, 42, .14);
+		}
+
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body {
+			margin: 0;
+			color: var(--ink);
+			font-family: "DM Sans", sans-serif;
+			background: var(--cream);
+			overflow-x: hidden;
+		}
+		a { color: inherit; text-decoration: none; }
+		button, input { font: inherit; }
+		button { cursor: pointer; }
+
+		.page-shell { position: relative; isolation: isolate; }
+		.page-shell::before {
+			content: "";
+			position: fixed;
+			inset: 0;
+			z-index: -2;
+			background: radial-gradient(circle at 92% 8%, #ffd98d 0 8%, transparent 28%),
+									radial-gradient(circle at 4% 40%, #f1ddff 0 7%, transparent 25%),
+									var(--cream);
+		}
+		.grain {
+			position: fixed;
+			inset: 0;
+			z-index: 5;
+			pointer-events: none;
+			opacity: .06;
+			background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.38'/%3E%3C/svg%3E");
+		}
+		.container { width: min(1160px, calc(100% - 40px)); margin: auto; }
+
+		nav {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 25px 0;
+		}
+		.brand { display: flex; gap: 11px; align-items: center; font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: -.04em; }
+		.brand-mark { display: grid; place-items: center; width: 41px; height: 41px; border-radius: 14px 14px 14px 4px; color: white; font-size: 20px; background: var(--rose); transform: rotate(-6deg); box-shadow: 5px 5px 0 var(--sun); }
+		.brand span:last-child { font-size: 18px; }
+		.nav-links { display: flex; align-items: center; gap: 27px; color: var(--muted); font-size: 14px; font-weight: 700; }
+		.nav-links a { transition: color .2s ease; }
+		.nav-links a:hover { color: var(--rose); }
+		.nav-cta { border: 0; border-radius: 99px; padding: 11px 17px; color: white; background: var(--ink); font-weight: 700; transition: transform .2s, background .2s; }
+		.nav-cta:hover { background: var(--rose); transform: translateY(-2px); }
+
+		.hero { min-height: 650px; display: grid; grid-template-columns: 1.03fr .97fr; align-items: center; gap: 40px; padding: 47px 0 90px; }
+		.eyebrow { display: inline-flex; gap: 8px; align-items: center; color: var(--rose); font-size: 12px; letter-spacing: .16em; font-weight: 700; text-transform: uppercase; }
+		.eyebrow::before { content: ""; width: 25px; height: 2px; background: var(--rose); }
+		h1, h2, h3 { font-family: "Space Grotesk", sans-serif; letter-spacing: -.07em; line-height: .96; margin: 0; }
+		h1 { max-width: 650px; margin: 18px 0 21px; font-size: clamp(54px, 8vw, 98px); }
+		h1 em { color: var(--saffron); font-style: normal; }
+		.hero-copy { max-width: 490px; color: var(--muted); font-size: 17px; line-height: 1.7; }
+		.hero-actions { display: flex; gap: 12px; margin-top: 30px; }
+		.primary, .secondary { display: inline-flex; align-items: center; gap: 8px; border-radius: 99px; padding: 14px 20px; font-weight: 700; border: 1px solid var(--ink); transition: transform .2s, box-shadow .2s; }
+		.primary { color: white; border-color: var(--saffron); background: var(--saffron); box-shadow: 0 9px 0 #bd4b1d; }
+		.secondary { background: transparent; }
+		.primary:hover, .secondary:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(37,19,28,.2); }
+		.hero-note { display: flex; gap: 11px; align-items: center; margin-top: 50px; color: var(--muted); font-size: 13px; }
+		.mini-dots { display: flex; }
+		.mini-dots i { width: 25px; height: 25px; border: 2px solid var(--cream); border-radius: 50%; margin-right: -7px; background: var(--sun); }
+		.mini-dots i:nth-child(2) { background: var(--rose); }
+		.mini-dots i:nth-child(3) { background: #6a52a3; }
+
+		.hero-art { position: relative; min-height: 510px; }
+		.sun-disc { position: absolute; top: 21px; right: 22%; width: 300px; height: 300px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 17px rgba(255, 200, 87, .18), 0 0 0 38px rgba(255, 200, 87, .12); }
+		.art-card { position: absolute; inset: 50px 22px 15px 45px; overflow: hidden; border-radius: 47% 47% 13% 13% / 31% 31% 8% 8%; background: linear-gradient(140deg, #bd4062, #713a77 60%, #3c2756); box-shadow: 20px 25px 0 rgba(255,255,255,.54), var(--shadow); }
+		.art-card::before { content: ""; position: absolute; inset: auto 0 0; height: 44%; background: repeating-linear-gradient(90deg, transparent 0 29px, rgba(255,255,255,.08) 30px 32px); transform: skewY(-7deg); }
+		.idol { position: absolute; left: 50%; bottom: 4%; width: 56%; height: 78%; transform: translateX(-50%); }
+		.idol .head { position: absolute; top: 15%; left: 22%; width: 56%; aspect-ratio: 1; border-radius: 50%; background: #db7c4b; box-shadow: inset -14px -9px #bb5d3d; }
+		.idol .ear { position: absolute; top: 38%; width: 31%; height: 31%; border-radius: 50%; background: #d57648; }
+		.idol .ear.left { left: 0; } .idol .ear.right { right: 0; }
+		.idol .crown { position: absolute; z-index: 1; top: 0; left: 22%; width: 56%; height: 34%; background: var(--sun); clip-path: polygon(0 100%, 8% 13%, 30% 63%, 50% 0, 69% 63%, 92% 13%, 100% 100%); filter: drop-shadow(0 5px 0 #b66a38); }
+		.idol .eye { position: absolute; z-index: 2; top: 47%; width: 18%; height: 5%; border-radius: 50%; background: var(--ink); }
+		.idol .eye.left { left: 30%; } .idol .eye.right { right: 30%; }
+		.idol .trunk { position: absolute; z-index: 2; top: 49%; left: 42%; width: 21%; height: 39%; border-radius: 50% 50% 55% 50%; background: #d57648; transform: rotate(9deg); }
+		.idol .trunk::after { content: ""; position: absolute; bottom: 4%; left: 22%; width: 50%; height: 12%; border-radius: 50%; background: #f3ad69; }
+		.idol .body { position: absolute; bottom: 0; left: 3%; width: 94%; height: 55%; border-radius: 46% 46% 10% 10%; background: #f4a742; box-shadow: inset -20px -15px #dc713f; }
+		.idol .arm { position: absolute; z-index: 2; bottom: 18%; width: 32%; height: 18%; border-radius: 50%; background: #dc7a48; } .idol .arm.left { left: -7%; transform: rotate(25deg); } .idol .arm.right { right: -7%; transform: rotate(-25deg); }
+		.floating-label { position: absolute; z-index: 2; display: flex; align-items: center; gap: 9px; padding: 12px 15px; border: 1px solid rgba(255,255,255,.7); border-radius: 15px; color: white; background: rgba(48, 26, 49, .7); backdrop-filter: blur(10px); font-size: 12px; font-weight: 700; box-shadow: 0 12px 20px rgba(48, 26, 49, .2); animation: bob 4s ease-in-out infinite; }
+		.floating-label.one { top: 15%; left: -2%; } .floating-label.two { right: -4%; bottom: 18%; animation-delay: -1.5s; }
+		@keyframes bob { 50% { transform: translateY(-9px) rotate(2deg); } }
+
+		.section-head { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 28px; }
+		h2 { font-size: clamp(35px, 5vw, 58px); }
+		.section-head p { max-width: 300px; margin: 0; color: var(--muted); line-height: 1.6; font-size: 14px; }
+		.explore { padding: 80px 0; }
+		.filters { display: flex; gap: 8px; margin-bottom: 24px; }
+		.filter { border: 1px solid var(--line); border-radius: 99px; padding: 10px 16px; color: var(--muted); background: rgba(255,255,255,.38); font-weight: 700; transition: .2s; }
+		.filter.active, .filter:hover { color: white; border-color: var(--ink); background: var(--ink); }
+		.search { margin-left: auto; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--ink); padding: 7px 0; color: var(--muted); }
+		.search input { width: 135px; border: 0; outline: 0; color: var(--ink); background: transparent; }
+		.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+		.festival-card { overflow: hidden; border: 1px solid rgba(71,37,43,.08); border-radius: 18px; background: rgba(255,255,255,.58); box-shadow: 0 5px 0 rgba(71,37,43,.05); transition: transform .28s, box-shadow .28s; }
+		.festival-card:hover { transform: translateY(-8px) rotate(-.5deg); box-shadow: 0 20px 35px rgba(97,45,42,.16); }
+		.card-visual { position: relative; height: 220px; overflow: hidden; background: var(--card-bg); }
+		.card-visual::before { content: attr(data-number); position: absolute; right: 14px; top: 8px; color: rgba(255,255,255,.3); font: 700 76px "Space Grotesk"; letter-spacing: -.1em; }
+		.card-visual::after { content: "✦  ✧  ✦"; position: absolute; top: 16px; left: 18px; color: rgba(255,255,255,.75); font-size: 13px; letter-spacing: 6px; }
+		.mini-idol { position: absolute; left: 50%; bottom: -19px; width: 150px; height: 190px; transform: translateX(-50%); }
+		.mini-idol::before { content: ""; position: absolute; left: 28px; top: 42px; width: 94px; height: 94px; border-radius: 50%; background: #d77a4d; box-shadow: inset -10px -9px #b75e42; }
+		.mini-idol::after { content: ""; position: absolute; left: 19px; bottom: 0; width: 112px; height: 112px; border-radius: 48% 48% 8% 8%; background: var(--idol-color); box-shadow: inset -15px -10px rgba(125,44,44,.27); }
+		.card-body { padding: 20px; }
+		.card-meta { display: flex; justify-content: space-between; color: var(--rose); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+		.card-body h3 { margin: 12px 0 9px; font-size: 24px; letter-spacing: -.05em; }
+		.card-body p { min-height: 44px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+		.card-link { display: inline-flex; gap: 7px; align-items: center; margin-top: 19px; color: var(--ink); font-size: 13px; font-weight: 700; }
+		.card-link span { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; color: white; background: #ed3d35; transition: transform .2s; }
+		.card-link:hover span { transform: scale(1.15); }
+		.social-links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
+		.social-links a { display: inline-flex; gap: 5px; align-items: center; border: 1px solid var(--line); border-radius: 99px; padding: 6px 9px; color: var(--muted); background: rgba(255,255,255,.55); font-size: 11px; font-weight: 700; transition: color .2s, border-color .2s, transform .2s; }
+		.social-links a:hover { color: var(--rose); border-color: var(--rose); transform: translateY(-2px); }
+		.social-links a:nth-child(2):hover { color: #e1306c; border-color: #e1306c; }
+		.empty { display: none; padding: 40px; color: var(--muted); text-align: center; }
+
+		.marquee { overflow: hidden; margin: 76px 0; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--rose); white-space: nowrap; font: 700 14px "Space Grotesk"; letter-spacing: .14em; text-transform: uppercase; }
+		.marquee-track { display: inline-block; animation: scroll 24s linear infinite; }
+		@keyframes scroll { to { transform: translateX(-50%); } }
+		.closing { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; padding: 30px 0 100px; }
+		.closing-copy p { max-width: 390px; color: var(--muted); line-height: 1.7; }
+		.spotlight { position: relative; overflow: hidden; min-height: 255px; padding: 32px; border-radius: 21px; color: white; background: var(--ink); }
+		.spotlight::before { content: ""; position: absolute; right: -70px; top: -90px; width: 240px; height: 240px; border-radius: 50%; background: var(--rose); }
+		.spotlight > * { position: relative; }
+		.spotlight small { color: var(--sun); font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+		.spotlight h3 { max-width: 290px; margin: 18px 0 23px; font-size: 36px; }
+		.spotlight button { border: 0; border-radius: 99px; padding: 10px 15px; color: var(--ink); background: var(--sun); font-weight: 700; }
+		footer { padding: 25px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+		footer .container { display: flex; justify-content: space-between; }
+
+		@media (max-width: 760px) {
+			.container { width: min(100% - 28px, 570px); }
+			nav { padding: 18px 0; } .nav-links a { display: none; } .nav-links { gap: 8px; }
+			.hero { display: block; min-height: 0; padding: 40px 0 70px; } h1 { font-size: clamp(53px, 17vw, 83px); }
+			.hero-art { min-height: 410px; margin-top: 35px; } .art-card { inset: 48px 8px 12px 20px; } .sun-disc { width: 220px; height: 220px; right: 19%; }
+			.floating-label.one { left: -2px; } .floating-label.two { right: -2px; }
+			.section-head { display: block; } .section-head p { margin-top: 15px; } .filters { flex-wrap: wrap; }
+			.search { width: 100%; margin: 8px 0 0; } .search input { flex: 1; }
+			.card-grid { grid-template-columns: 1fr; } .card-visual { height: 190px; }
+			.closing { grid-template-columns: 1fr; gap: 28px; padding-bottom: 70px; } footer .container { display: block; } footer p { margin: 8px 0; }
+		}
+	</style>
+</head>
+<body>
+	<div class="grain"></div>
+	<main class="page-shell">
+		<header class="container">
+			<nav aria-label="Main navigation">
+				<a class="brand" href="#top"><span class="brand-mark">ॐ</span><span>VIGHNARAJA<br><small>2026 / TELANGANA</small></span></a>
+				<div class="nav-links"><a href="#idols">Idol map</a><a href="#stories">Stories</a><a class="nav-cta" href="#idols">Explore the wave ↗</a></div>
+			</nav>
+		</header>
+
+		<section class="container hero" id="top">
+			<div class="hero-content">
+				<span class="eyebrow">A visual festival guide</span>
+				<h1>Big hearts.<br><em>Bigger idols.</em></h1>
+				<p class="hero-copy">The 2026 Ganapathi season is calling. Follow the colour, craft and collective pulse of Hyderabad, Hanamkonda and Warangal, one unforgettable pandal route at a time.</p>
+				<div class="hero-actions"><a class="primary" href="#idols">Find your pandal <span>↘</span></a><a class="secondary" href="#stories">Our stories</a></div>
+				<div class="hero-note"><span class="mini-dots"><i></i><i></i><i></i></span><span>Curated with love by the festival crowd<br>September 2026 · Telangana</span></div>
+			</div>
+			<div class="hero-art" aria-label="Illustration of a colourful Ganapathi idol">
+				<div class="sun-disc"></div><div class="art-card"><div class="idol"><div class="crown"></div><div class="ear left"></div><div class="ear right"></div><div class="head"><div class="eye left"></div><div class="eye right"></div><div class="trunk"></div></div><div class="body"></div><div class="arm left"></div><div class="arm right"></div></div></div>
+				<div class="floating-label one">✦ 10 DAYS OF JOY</div><div class="floating-label two">HYD <span>×</span> WGL</div>
+			</div>
+		</section>
+
+		<section class="container explore" id="idols">
+			<div class="section-head"><div><span class="eyebrow">Choose your route</span><h2>Idols to<br>look out for</h2></div><p>Explore 15 route ideas across the three-city region. Khairatabad is the confirmed 2026 headline idol; local pandal details can change by committee.</p></div>
+			<div class="filters" role="group" aria-label="Filter idols by city"><button class="filter active" data-city="all">All cities</button><button class="filter" data-city="hyderabad">Hyderabad</button><button class="filter" data-city="hanamkonda">Hanamkonda</button><button class="filter" data-city="warangal">Warangal</button><label class="search">⌕ <input id="searchInput" type="search" placeholder="Search a style" aria-label="Search a style"></label></div>
+			<div class="card-grid" id="cardGrid">
+				<article class="festival-card" data-city="hyderabad" data-search="eco khairatabad panchamukha sankatahara maha ganapati official"><div class="card-visual" data-number="01" style="--card-bg:linear-gradient(135deg,#e56a39,#8e315e);"><div class="mini-idol" style="--idol-color:#f3a73e"></div></div><div class="card-body"><div class="card-meta"><span>Hyderabad</span><span>Confirmed 2026</span></div><h3>Khairatabad Maha Ganapati</h3><p>The 2026 theme is Panchamukha Sankatahara Maha Ganapati. Check the official committee updates.</p><a class="card-link" href="https://www.ganapathideva.org/" target="_blank" rel="noopener">Official updates <span>↗</span></a></div></article>
+				<article class="festival-card" data-city="hyderabad" data-search="balapur laddu tradition hyderabad"><div class="card-visual" data-number="02" style="--card-bg:linear-gradient(135deg,#e6a32e,#b83e5f);"><div class="mini-idol" style="--idol-color:#ed8e3d"></div></div><div class="card-body"><div class="card-meta"><span>Hyderabad</span><span>Tradition</span></div><h3>Balapur Laddu Route</h3><p>A famous Hyderabad-area Ganesh tradition known for its public auction and procession.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Balapur+Ganesh+2026" target="_blank" rel="noopener">View videos <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hyderabad" data-search="old city charminar dhoolpet culture drums"><div class="card-visual" data-number="03" style="--card-bg:linear-gradient(135deg,#9e416f,#493b74);"><div class="mini-idol" style="--idol-color:#efc159"></div></div><div class="card-body"><div class="card-meta"><span>Hyderabad</span><span>Culture</span></div><h3>Dhoolpet Old City</h3><p>Drums, marigolds and dense neighbourhood pandals near Hyderabad’s historic core.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Dhoolpet+Ganesh+2026" target="_blank" rel="noopener">Hear the drums <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hyderabad" data-search="secunderabad parade ground ganesh family"><div class="card-visual" data-number="04" style="--card-bg:linear-gradient(135deg,#5c458d,#d13d62);"><div class="mini-idol" style="--idol-color:#e85d67"></div></div><div class="card-body"><div class="card-meta"><span>Hyderabad</span><span>City route</span></div><h3>Secunderabad Utsav</h3><p>Look for family-friendly public pandals and evening aarti routes across Secunderabad.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Secunderabad+Ganesh+2026" target="_blank" rel="noopener">Explore videos <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hyderabad" data-search="madhapur hitech city neon future modern art"><div class="card-visual" data-number="05" style="--card-bg:linear-gradient(135deg,#6a4b99,#c83e68);"><div class="mini-idol" style="--idol-color:#f09d43"></div></div><div class="card-body"><div class="card-meta"><span>Hyderabad</span><span>New age</span></div><h3>Madhapur Digital Pandal</h3><p>A contemporary route idea for LED decoration, music and young community groups.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Madhapur+Ganesh+2026" target="_blank" rel="noopener">See it glow <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hyderabad" data-search="kukatpally miyapur lake eco clay green"><div class="card-visual" data-number="06" style="--card-bg:linear-gradient(135deg,#43837d,#374a7b);"><div class="mini-idol" style="--idol-color:#efad47"></div></div><div class="card-body"><div class="card-meta"><span>Hyderabad</span><span>Eco watch</span></div><h3>Kukatpally Eco Route</h3><p>Search local committees for clay idols, neighbourhood aarti and approved immersion points.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Kukatpally+Ganesh+2026" target="_blank" rel="noopener">Find local reels <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hanamkonda" data-search="hanamkonda thousand pillar heritage kakatiya temple"><div class="card-visual" data-number="07" style="--card-bg:linear-gradient(135deg,#d65e37,#e0a32c);"><div class="mini-idol" style="--idol-color:#9e5081"></div></div><div class="card-body"><div class="card-meta"><span>Hanamkonda</span><span>Heritage route</span></div><h3>Thousand Pillar Trail</h3><p>A Kakatiya-inspired route around one of Hanamkonda’s best-known heritage landmarks.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Hanamkonda+Ganesh+2026" target="_blank" rel="noopener">Search updates <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hanamkonda" data-search="hanamkonda bhadrakali temple lake idol aarti"><div class="card-visual" data-number="08" style="--card-bg:linear-gradient(135deg,#43837d,#374a7b);"><div class="mini-idol" style="--idol-color:#efad47"></div></div><div class="card-body"><div class="card-meta"><span>Hanamkonda</span><span>Lakeside</span></div><h3>Bhadrakali Lake Route</h3><p>A scenic public-celebration search point near the temple and lakefront area.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Bhadrakali+Temple+Ganesh+Hanamkonda+2026" target="_blank" rel="noopener">Find the route <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="hanamkonda" data-search="hanamkonda chowrastha kazipet community youth music"><div class="card-visual" data-number="09" style="--card-bg:linear-gradient(135deg,#e27346,#8b4c87);"><div class="mini-idol" style="--idol-color:#dc684d"></div></div><div class="card-body"><div class="card-meta"><span>Hanamkonda</span><span>Community</span></div><h3>Hanamkonda Chowrastha</h3><p>Follow local youth groups and colony committees for the busiest evening aarti moments.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Hanamkonda+Ganesh+Utsav+2026" target="_blank" rel="noopener">Meet the makers <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="warangal" data-search="warangal fort heritage orugallu kakatiya craft"><div class="card-visual" data-number="10" style="--card-bg:linear-gradient(135deg,#b84b54,#633c77);"><div class="mini-idol" style="--idol-color:#f0a53d"></div></div><div class="card-body"><div class="card-meta"><span>Warangal</span><span>Heritage route</span></div><h3>Warangal Fort Canvas</h3><p>Use the fort and Kakatiya Kala Thoranam as inspiration for a heritage-themed idol trail.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Warangal+Ganesh+2026+pandal" target="_blank" rel="noopener">Watch the route <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="warangal" data-search="warangal bhadrakali lake eco green lakefront"><div class="card-visual" data-number="11" style="--card-bg:linear-gradient(135deg,#43837d,#374a7b);"><div class="mini-idol" style="--idol-color:#efad47"></div></div><div class="card-body"><div class="card-meta"><span>Warangal</span><span>Eco watch</span></div><h3>Bhadrakali Lake Light</h3><p>Look for lakefront celebrations and check local guidance before planning immersion visits.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Bhadrakali+Lake+Warangal+Ganesh+2026" target="_blank" rel="noopener">Find the feeling <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="warangal" data-search="warangal nakalagutta public pandal drums procession"><div class="card-visual" data-number="12" style="--card-bg:linear-gradient(135deg,#e27346,#8b4c87);"><div class="mini-idol" style="--idol-color:#dc684d"></div></div><div class="card-body"><div class="card-meta"><span>Warangal</span><span>City route</span></div><h3>Nakkalagutta Beat</h3><p>A neighbourhood route for public music, decorations and procession-day energy.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Nakkalagutta+Ganesh+Warangal+2026" target="_blank" rel="noopener">Hear the beat <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="warangal" data-search="warangal enumamula market community yuva rangam youth"><div class="card-visual" data-number="13" style="--card-bg:linear-gradient(135deg,#e56a39,#8e315e);"><div class="mini-idol" style="--idol-color:#f3a73e"></div></div><div class="card-body"><div class="card-meta"><span>Warangal</span><span>Community</span></div><h3>Yuva Rangam</h3><p>Young makers bring murals, music and a fresh pulse to the three-city festival season.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Warangal+Ganesh+Utsav+2026" target="_blank" rel="noopener">Meet the makers <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="warangal" data-search="kazipet warangal tri city ganesh pandal railway"><div class="card-visual" data-number="14" style="--card-bg:linear-gradient(135deg,#e6a32e,#b83e5f);"><div class="mini-idol" style="--idol-color:#ed8e3d"></div></div><div class="card-body"><div class="card-meta"><span>Warangal tri-city</span><span>Route guide</span></div><h3>Kazipet Community Loop</h3><p>Include Kazipet when mapping the connected Hanamkonda–Warangal festival circuit.</p><a class="card-link" href="https://www.youtube.com/results?search_query=Kazipet+Ganesh+2026" target="_blank" rel="noopener">Explore videos <span>▶</span></a></div></article>
+				<article class="festival-card" data-city="warangal" data-search="warangal clay idol eco friendly immersion telangana"><div class="card-visual" data-number="15" style="--card-bg:linear-gradient(135deg,#5c458d,#d13d62);"><div class="mini-idol" style="--idol-color:#e85d67"></div></div><div class="card-body"><div class="card-meta"><span>Warangal</span><span>Eco watch</span></div><h3>Clay Idol Circle</h3><p>Use this route to discover local clay-idol groups and responsible visarjan information.</p><a class="card-link" href="https://www.youtube.com/results?search_query=eco+friendly+Ganesh+Warangal+2026" target="_blank" rel="noopener">Learn more <span>▶</span></a></div></article>
+			</div><div class="empty" id="emptyState">No pandal matched that search. Try “eco”, “heritage” or a city name.</div>
+		</section>
+
+		<div class="marquee"><div class="marquee-track">Ganapathi Bappa Morya &nbsp; ✦ &nbsp; Hyderabad to Warangal &nbsp; ✦ &nbsp; Celebrate responsibly &nbsp; ✦ &nbsp; Ganapathi Bappa Morya &nbsp; ✦ &nbsp; Hyderabad to Warangal &nbsp; ✦ &nbsp; Celebrate responsibly &nbsp; ✦ &nbsp;</div></div>
+		<section class="container closing" id="stories"><div class="closing-copy"><span class="eyebrow">The 2026 mood</span><h2>Made of<br>many hands.</h2><p>Every idol is an act of imagination. Every procession is a thousand small acts of care. Come for the spectacle, stay for the people.</p></div><div class="spotlight"><small>Now playing · community reel</small><h3>What does Bappa mean to you?</h3><button onclick="window.open('https://www.youtube.com/results?search_query=Ganesh+Chaturthi+Telangana+2026','_blank')">Play the reel&nbsp; ▶</button></div></section>
+		<footer><div class="container"><span>© 2026 Vighnaraja / A visual fan guide</span><span>Built for joy. Please keep the festival green.</span></div></footer>
+	</main>
+	<script>
+		const filters = document.querySelectorAll('.filter');
+		const cards = document.querySelectorAll('.festival-card');
+		const searchInput = document.getElementById('searchInput');
+		const emptyState = document.getElementById('emptyState');
+		let activeCity = 'all';
+
+		document.querySelectorAll('.festival-card').forEach(card => {
+			const sourceLink = card.querySelector('.card-link');
+			const query = encodeURIComponent(`${card.dataset.search} Ganesh 2026`);
+			const socialLinks = document.createElement('div');
+			socialLinks.className = 'social-links';
+			socialLinks.innerHTML = `
+				<a href="https://www.youtube.com/results?search_query=${query}+shorts" target="_blank" rel="noopener">Shorts ▶</a>
+				<a href="https://www.instagram.com/explore/search/keyword/?q=${query}" target="_blank" rel="noopener">Reels ◎</a>
+			`;
+			sourceLink.insertAdjacentElement('afterend', socialLinks);
+		});
+
+		function filterCards() {
+			const query = searchInput.value.trim().toLowerCase();
+			let visible = 0;
+			cards.forEach(card => {
+				const matchesCity = activeCity === 'all' || card.dataset.city === activeCity;
+				const matchesSearch = !query || card.dataset.search.includes(query) || card.textContent.toLowerCase().includes(query);
+				const show = matchesCity && matchesSearch;
+				card.style.display = show ? '' : 'none';
+				if (show) visible++;
+			});
+			emptyState.style.display = visible ? 'none' : 'block';
+		}
+
+		filters.forEach(button => button.addEventListener('click', () => {
+			filters.forEach(item => item.classList.remove('active'));
+			button.classList.add('active');
+			activeCity = button.dataset.city;
+			filterCards();
+		}));
+		searchInput.addEventListener('input', filterCards);
+	</script>
+</body>
+</html>
