@@ -109,6 +109,10 @@
 				resolvePartyRound();
 				return;
 			}
+			if (activeParty) {
+				partyStatus.textContent = 'Waiting for your friend to connect. Your move will be sent when the party is ready.';
+				return;
+			}
 			const computerMove = moves[Math.floor(Math.random() * moves.length)];
 			finishRound(playerMove, computerMove);
 		}
@@ -216,6 +220,7 @@
 				playRound(gesture);
 				stableFrames = 0;
 				cameraStatus.textContent = `Played ${labels[gesture]} from camera sign.`;
+				if (activeParty && connection && connection.open) partyStatus.textContent = `Camera sent ${labels[gesture]}. Waiting for your friend...`;
 			}
 		}
 		async function scanCamera() {
