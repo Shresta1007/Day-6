@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A responsive anime-style Rock Paper Scissors game.">
+	<title>Battle Burst | Rock Paper Scissors</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+	<style>
+		:root { --night:#16152d; --ink:#28213e; --cream:#fff9ed; --pink:#ff5794; --coral:#ff7b58; --yellow:#ffd563; --cyan:#53d8d2; --lavender:#c8b8ff; --muted:#766c8e; --panel:rgba(255,249,237,.95); --shadow:0 14px 0 rgba(40,33,62,.13),0 24px 40px rgba(32,20,69,.18); }
+		* { box-sizing:border-box; }
+		body { margin:0; min-height:100vh; overflow-x:hidden; color:var(--ink); font-family:Nunito,sans-serif; background:var(--night); }
+		button { font:inherit; cursor:pointer; }
+		.arena { position:relative; min-height:100vh; isolation:isolate; background:radial-gradient(circle at 50% 42%,#443b70 0,#262449 30%,#16152d 72%); }
+		.arena:before { content:""; position:fixed; inset:0; z-index:-1; opacity:.28; background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px); background-size:46px 46px; mask-image:linear-gradient(to bottom,black,transparent 85%); }
+		.spark-field { position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+		.spark-field i { position:absolute; display:block; width:8px; height:8px; background:var(--yellow); transform:rotate(45deg); animation:drift 7s linear infinite; }
+		.spark-field i:nth-child(1){left:8%;top:19%}.spark-field i:nth-child(2){left:79%;top:14%;width:5px;height:5px;background:var(--cyan);animation-delay:-2s}.spark-field i:nth-child(3){left:88%;top:64%;animation-delay:-4s}.spark-field i:nth-child(4){left:16%;top:75%;width:5px;height:5px;background:var(--pink);animation-delay:-5s}
+		@keyframes drift { 50%{transform:translate(14px,-20px) rotate(135deg);opacity:.4} }
+		.wrap { width:min(1120px,calc(100% - 36px)); margin:auto; }
+		header { display:flex; align-items:center; justify-content:space-between; padding:24px 0; color:white; }
+		.logo { display:flex; align-items:center; gap:12px; font-family:Bungee,sans-serif; font-size:18px; line-height:1.1; }
+		.logo-mark { display:grid; place-items:center; width:42px; height:42px; border:3px solid var(--ink); border-radius:13px 13px 13px 3px; color:var(--ink); background:var(--yellow); transform:rotate(-8deg); box-shadow:5px 5px 0 var(--pink); }
+		.round-tag { border:1px solid rgba(255,255,255,.28); border-radius:99px; padding:9px 14px; color:var(--lavender); font-size:12px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+		.hero { display:grid; grid-template-columns:.8fr 1.2fr; gap:42px; align-items:center; padding:45px 0 32px; }
+		.kicker { color:var(--yellow); font-size:13px; font-weight:900; letter-spacing:.22em; text-transform:uppercase; }
+		h1,h2,h3 { margin:0; font-family:Bungee,sans-serif; line-height:.95; }
+		h1 { max-width:420px; margin:13px 0 19px; color:white; font-size:clamp(48px,7vw,83px); letter-spacing:.015em; text-shadow:6px 6px 0 #4c3d77; }
+		h1 span { color:var(--pink); text-shadow:4px 4px 0 var(--yellow); }
+		.intro { max-width:390px; color:#c9c4dd; font-size:16px; line-height:1.65; }
+		.hero-burst { position:relative; display:inline-flex; margin-top:22px; color:var(--ink); font-size:12px; font-weight:900; }
+		.hero-burst:before { content:""; position:absolute; inset:-9px -14px; z-index:-1; background:var(--yellow); clip-path:polygon(4% 32%,21% 25%,13% 4%,40% 13%,51% 0,61% 13%,90% 4%,83% 27%,100% 36%,84% 52%,94% 79%,66% 72%,54% 100%,42% 79%,14% 89%,21% 62%,0 52%); }
+		.battle-stage { position:relative; min-height:355px; display:flex; align-items:center; justify-content:center; }
+		.battle-stage:before { content:"VS"; position:absolute; z-index:0; color:rgba(255,255,255,.08); font:83px Bungee; }
+		.character { position:relative; z-index:1; width:178px; height:255px; animation:hover 4s ease-in-out infinite; }
+		.character.enemy { animation-delay:-1.7s; transform:scaleX(-1); }
+		.enemy .face,.enemy .hair { transform:scaleX(-1); }
+		.head { position:absolute; top:30px; left:39px; width:100px; height:105px; border:4px solid var(--ink); border-radius:46% 46% 43% 48%; background:#ffca93; box-shadow:inset -10px -9px #ee9c78; }
+		.hair { position:absolute; z-index:2; top:12px; left:20px; width:137px; height:75px; border:4px solid var(--ink); border-radius:60% 52% 24% 18%; background:var(--pink); clip-path:polygon(0 65%,12% 25%,34% 50%,45% 0,58% 42%,82% 6%,77% 48%,100% 38%,88% 77%,65% 62%,48% 100%,31% 68%,14% 91%); }
+		.enemy .hair { background:var(--cyan); }
+		.face { position:absolute; inset:0; }
+		.eye { position:absolute; top:70px; width:17px; height:25px; border:3px solid var(--ink); border-radius:50%; background:white; }
+		.eye:after { content:""; position:absolute; left:5px; top:7px; width:6px; height:10px; border-radius:50%; background:var(--ink); }
+		.eye.left { left:56px; }.eye.right { right:56px; }.mouth { position:absolute; left:81px; top:99px; width:16px; height:8px; border-bottom:3px solid var(--ink); border-radius:50%; }
+		.body { position:absolute; bottom:0; left:22px; width:136px; height:145px; border:4px solid var(--ink); border-radius:50% 50% 20% 20%; background:var(--lavender); box-shadow:inset -17px -10px #a18bdc; }
+		.enemy .body { background:var(--coral); box-shadow:inset -17px -10px #dc5d55; }.collar { position:absolute; z-index:2; top:113px; left:62px; width:55px; height:32px; border:4px solid var(--ink); border-radius:50%; background:var(--yellow); }
+		.arm { position:absolute; z-index:3; top:151px; left:0; width:57px; height:25px; border:4px solid var(--ink); border-radius:50%; background:#ffca93; transform:rotate(33deg); }.arm.right { left:123px; transform:rotate(-33deg); }.enemy .arm.left,.enemy .arm.right { transform:scaleX(-1) rotate(33deg); }
+		.power-line { position:absolute; width:115px; height:3px; background:var(--yellow); transform:rotate(24deg); opacity:.8; }.power-line.one { top:54px; left:2%; }.power-line.two { right:3%; bottom:57px; transform:rotate(-27deg); background:var(--pink); }
+		@keyframes hover { 50%{transform:translateY(-9px)} }.enemy { animation-name:hover-enemy; } @keyframes hover-enemy { 50%{transform:translateY(-9px) scaleX(-1)} }
+		.game-panel { position:relative; max-width:840px; margin:0 auto 65px; padding:30px; border:4px solid var(--ink); border-radius:24px; background:var(--panel); box-shadow:var(--shadow); }
+		.panel-top { display:flex; align-items:center; justify-content:space-between; gap:20px; padding-bottom:20px; border-bottom:2px dashed rgba(40,33,62,.18); }.panel-top h2 { font-size:23px; }.panel-top p { margin:5px 0 0; color:var(--muted); font-size:13px; font-weight:700; }.scoreboard { display:flex; gap:7px; text-align:center; }.score { min-width:66px; padding:8px 10px; border-radius:10px; color:white; background:var(--ink); }.score strong { display:block; font-size:25px; line-height:1; }.score small { font-size:9px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }.score.draw { color:var(--ink); background:var(--yellow); }
+		.duel { display:grid; grid-template-columns:1fr auto 1fr; gap:20px; align-items:center; padding:28px 0 23px; }.choice-view { text-align:center; }.choice-view span { display:block; margin-bottom:5px; color:var(--muted); font-size:11px; font-weight:900; letter-spacing:.15em; text-transform:uppercase; }.choice-icon { display:grid; place-items:center; min-height:78px; color:var(--ink); font-size:54px; }.choice-icon.pulse { animation:pulse .45s ease; }.vs { display:grid; place-items:center; width:47px; height:47px; border:3px solid var(--ink); border-radius:50%; color:white; background:var(--pink); font:13px Bungee; transform:rotate(-8deg); }
+		@keyframes pulse { 50%{transform:scale(1.3) rotate(8deg)} }.result { min-height:37px; color:var(--pink); text-align:center; font:16px Bungee; }.result.win { color:#15988e; }.result.lose { color:var(--pink); }
+		.moves { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; }.move { min-height:110px; border:3px solid var(--ink); border-radius:17px; color:var(--ink); background:white; box-shadow:0 6px 0 var(--ink); transition:transform .18s,box-shadow .18s,background .18s; }.move:hover,.move:focus-visible { background:#fff1b6; transform:translateY(-5px); box-shadow:0 11px 0 var(--ink); outline:none; }.move:active { transform:translateY(2px); box-shadow:0 4px 0 var(--ink); }.move b { display:block; font-size:40px; line-height:1; }.move span { display:block; margin-top:8px; font-size:12px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }.hint { margin:19px 0 0; color:var(--muted); text-align:center; font-size:12px; font-weight:700; }.reset { display:block; margin:17px auto 0; border:0; border-bottom:2px solid var(--pink); padding:4px 0; color:var(--pink); background:none; font-size:12px; font-weight:900; } footer { padding:0 0 28px; color:#8d86aa; text-align:center; font-size:12px; }
+		.camera-panel { display:grid; grid-template-columns:1fr .9fr; gap:18px; align-items:center; max-width:840px; margin:-35px auto 45px; padding:18px; border:2px solid rgba(255,255,255,.18); border-radius:18px; color:white; background:rgba(25,22,52,.72); }
+		.camera-copy h2 { font-size:18px; }.camera-copy p { margin:7px 0 13px; color:#c9c4dd; font-size:12px; line-height:1.5; }.camera-actions { display:flex; gap:8px; flex-wrap:wrap; }.camera-button { border:2px solid var(--yellow); border-radius:99px; padding:8px 13px; color:var(--ink); background:var(--yellow); font-size:12px; font-weight:900; }.camera-button.stop { border-color:var(--pink); color:white; background:transparent; }.camera-button:disabled { cursor:not-allowed; opacity:.45; }.camera-status { display:block; margin-top:9px; color:var(--lavender); font-size:11px; font-weight:700; }
+		.camera-frame { position:relative; min-height:150px; overflow:hidden; border:3px solid var(--yellow); border-radius:14px; background:repeating-linear-gradient(0deg,rgba(83,216,210,.08) 0 2px,transparent 2px 7px),#211d43; }.camera-frame:before,.camera-frame:after { content:""; position:absolute; width:20px; height:20px; border-color:var(--pink); }.camera-frame:before { left:10px; top:10px; border-top:3px solid; border-left:3px solid; }.camera-frame:after { right:10px; bottom:10px; border-right:3px solid; border-bottom:3px solid; }.camera-frame video { display:block; width:100%; height:150px; object-fit:cover; transform:scaleX(-1); }.camera-placeholder { display:grid; place-items:center; height:150px; color:#8d86aa; font-size:12px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }.camera-frame.active .camera-placeholder { display:none; }
+		.party-panel { max-width:840px; margin:0 auto 28px; padding:22px; border:3px solid var(--yellow); border-radius:20px; color:white; background:linear-gradient(135deg,rgba(46,37,82,.96),rgba(26,24,57,.96)); box-shadow:0 9px 0 rgba(0,0,0,.18); }.party-panel h2 { font-size:22px; }.party-panel p { margin:7px 0 16px; color:#c9c4dd; font-size:13px; }.party-actions { display:flex; flex-wrap:wrap; gap:9px; }.party-button { border:2px solid var(--cyan); border-radius:99px; padding:10px 14px; color:var(--ink); background:var(--cyan); font-size:12px; font-weight:900; }.party-button.secondary { color:white; background:transparent; }.party-input { width:150px; border:2px solid rgba(255,255,255,.3); border-radius:99px; outline:0; padding:9px 13px; color:white; background:rgba(0,0,0,.18); font-weight:900; letter-spacing:.12em; text-transform:uppercase; }.party-input::placeholder { color:#aaa4bf; }.party-code { display:inline-flex; align-items:center; min-height:40px; margin:15px 0 0; border:2px dashed var(--yellow); border-radius:11px; padding:7px 12px; color:var(--yellow); font:18px Bungee; letter-spacing:.12em; }.party-status { display:block; margin-top:11px; color:var(--lavender); font-size:12px; font-weight:700; }.share-row { display:none; gap:7px; flex-wrap:wrap; margin-top:12px; }.share-row.visible { display:flex; }.share-button { border:1px solid rgba(255,255,255,.35); border-radius:99px; padding:7px 10px; color:white; background:rgba(255,255,255,.08); font-size:11px; font-weight:900; }.share-button:hover { border-color:var(--yellow); color:var(--yellow); }
+		@media (max-width:720px) { .wrap { width:min(100% - 26px,540px); } header { padding:17px 0; }.logo { font-size:14px; }.round-tag { padding:7px 9px; font-size:10px; }.hero { display:block; padding:43px 0 18px; }.intro { font-size:15px; }.battle-stage { min-height:300px; margin-top:28px; transform:scale(.9); }.character { width:150px; }.character.enemy { margin-left:-27px; }.game-panel { margin-bottom:38px; padding:20px 15px; }.panel-top { align-items:flex-start; }.panel-top h2 { font-size:18px; }.scoreboard { gap:4px; }.score { min-width:54px; padding:7px 5px; }.score strong { font-size:20px; }.score small { font-size:8px; }.duel { padding:20px 0 14px; }.choice-icon { min-height:65px; font-size:44px; }.moves { gap:8px; }.move { min-height:93px; }.move b { font-size:32px; }.move span { font-size:10px; }.camera-panel { grid-template-columns:1fr; margin-top:-10px; } }
+		@media (max-width:390px) { .round-tag { display:none; }.battle-stage { transform:scale(.78); margin:-8px -38px; }.panel-top { display:block; }.scoreboard { margin-top:13px; justify-content:flex-start; }.moves { grid-template-columns:1fr; }.move { min-height:65px; display:flex; align-items:center; justify-content:center; gap:10px; }.move b { font-size:28px; }.move span { margin-top:0; } }
+	</style>
+</head>
+<body>
+	<main class="arena"><div class="spark-field" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="wrap">
+		<header><div class="logo"><span class="logo-mark">VS</span><span>Battle<br>Burst</span></div><span class="round-tag">Anime arena / 01</span></header>
+		<section class="hero"><div><span class="kicker">Choose your fighter</span><h1>Ready?<br><span>Janken!</span></h1><p class="intro">A tiny battle of timing, instinct and dramatic hand signs. Pick your move and face the arena challenger.</p><span class="hero-burst">First to master the mind game</span></div><div class="battle-stage" aria-label="Anime-style battle illustration"><span class="power-line one"></span><span class="power-line two"></span><div class="character"><div class="hair"></div><div class="head"><div class="face"><span class="eye left"></span><span class="eye right"></span><span class="mouth"></span></div></div><div class="collar"></div><div class="body"></div><div class="arm left"></div><div class="arm right"></div></div><div class="character enemy"><div class="hair"></div><div class="head"><div class="face"><span class="eye left"></span><span class="eye right"></span><span class="mouth"></span></div></div><div class="collar"></div><div class="body"></div><div class="arm left"></div><div class="arm right"></div></div></div></section>
+		<section class="party-panel" aria-labelledby="partyTitle"><h2 id="partyTitle">Create a battle party</h2><p>Make a room code, share the invitation, and ask friends to enter the same code. This standalone page creates the lobby invitation; live cross-device turns need a server connection.</p><div class="party-actions"><button class="party-button" id="createParty">Create party</button><input class="party-input" id="partyInput" maxlength="6" placeholder="CODE" aria-label="Enter party code"><button class="party-button secondary" id="joinParty">Join party</button></div><span class="party-code" id="partyCode" hidden>------</span><div class="share-row" id="shareRow"><button class="share-button" id="copyParty">Copy invite</button><button class="share-button" id="whatsappParty">WhatsApp</button><button class="share-button" id="instagramParty">Instagram</button><button class="share-button" id="snapchatParty">Snapchat</button></div><span class="party-status" id="partyStatus" aria-live="polite">No party selected.</span></section>
+		<section class="game-panel" aria-labelledby="gameTitle"><div class="panel-top"><div><h2 id="gameTitle">Make your move</h2><p id="rivalLabel">The rival is waiting...</p></div><div class="scoreboard" aria-label="Scoreboard"><div class="score"><strong id="playerScore">0</strong><small>You</small></div><div class="score draw"><strong id="drawScore">0</strong><small>Draw</small></div><div class="score"><strong id="computerScore">0</strong><small>Rival</small></div></div></div><div class="duel"><div class="choice-view"><span>Your sign</span><div id="playerChoice" class="choice-icon">?</div></div><div class="vs">VS</div><div class="choice-view"><span>Rival sign</span><div id="computerChoice" class="choice-icon">?</div></div></div><div id="result" class="result" aria-live="polite">Pick rock, paper or scissors</div><div class="moves"><button class="move" data-move="rock" aria-label="Choose rock"><b>O</b><span>Rock</span></button><button class="move" data-move="paper" aria-label="Choose paper"><b>[ ]</b><span>Paper</span></button><button class="move" data-move="scissors" aria-label="Choose scissors"><b>V</b><span>Scissors</span></button></div><p class="hint">Keyboard: R for rock, P for paper, S for scissors</p><button class="reset" id="resetGame">Reset score</button></section>
+		<section class="camera-panel" aria-labelledby="cameraTitle"><div class="camera-copy"><h2 id="cameraTitle">Enter camera mode</h2><p>Raise an open hand for Paper, close all fingers for Rock, or show a V sign for Scissors. Hold the sign steady for a moment.</p><div class="camera-actions"><button class="camera-button" id="startCamera">Start camera</button><button class="camera-button stop" id="stopCamera" disabled>Stop camera</button></div><span class="camera-status" id="cameraStatus" aria-live="polite">Camera is off.</span></div><div class="camera-frame" id="cameraFrame"><div class="camera-placeholder">Camera standby</div><video id="cameraVideo" autoplay playsinline muted></video></div></section>
+		<footer>Battle Burst / A one-page hand-sign showdown</footer>
+	</div></main>
+	<script>
+		const moves = ['rock', 'paper', 'scissors'];
+		const icons = { rock: 'O', paper: '[ ]', scissors: 'V' };
+		const labels = { rock: 'Rock', paper: 'Paper', scissors: 'Scissors' };
+		const scores = { player: 0, computer: 0, draw: 0 };
+		const playerChoice = document.getElementById('playerChoice');
+		const computerChoice = document.getElementById('computerChoice');
+		const result = document.getElementById('result');
+		function playRound(playerMove) {
+			const computerMove = moves[Math.floor(Math.random() * moves.length)];
+			playerChoice.textContent = icons[playerMove]; computerChoice.textContent = icons[computerMove];
+			playerChoice.classList.remove('pulse'); computerChoice.classList.remove('pulse'); void playerChoice.offsetWidth; playerChoice.classList.add('pulse'); computerChoice.classList.add('pulse'); result.className = 'result';
+			if (playerMove === computerMove) { scores.draw++; result.textContent = `Draw! Both chose ${labels[playerMove]}.`; }
+			else if ((playerMove === 'rock' && computerMove === 'scissors') || (playerMove === 'paper' && computerMove === 'rock') || (playerMove === 'scissors' && computerMove === 'paper')) { scores.player++; result.classList.add('win'); result.textContent = `${labels[playerMove]} beats ${labels[computerMove]}! You win!`; }
+			else { scores.computer++; result.classList.add('lose'); result.textContent = `${labels[computerMove]} beats ${labels[playerMove]}. Rival wins!`; }
+			document.getElementById('playerScore').textContent = scores.player; document.getElementById('computerScore').textContent = scores.computer; document.getElementById('drawScore').textContent = scores.draw;
+		}
+		document.querySelectorAll('.move').forEach(button => button.addEventListener('click', () => playRound(button.dataset.move)));
+		document.addEventListener('keydown', event => { const keyMoves = { r: 'rock', p: 'paper', s: 'scissors' }; const move = keyMoves[event.key.toLowerCase()]; if (move) playRound(move); });
+		document.getElementById('resetGame').addEventListener('click', () => { scores.player = 0; scores.computer = 0; scores.draw = 0; document.getElementById('playerScore').textContent = '0'; document.getElementById('computerScore').textContent = '0'; document.getElementById('drawScore').textContent = '0'; playerChoice.textContent = '?'; computerChoice.textContent = '?'; result.className = 'result'; result.textContent = 'Pick rock, paper or scissors'; });
+		const partyCode = document.getElementById('partyCode');
+		const partyInput = document.getElementById('partyInput');
+		const partyStatus = document.getElementById('partyStatus');
+		const shareRow = document.getElementById('shareRow');
+		let activeParty = '';
+		function makePartyCode() {
+			const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+			return Array.from({ length: 6 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('');
+		}
+		function partyInvite() {
+			return `${location.href.split('#')[0]}#party=${activeParty}`;
+		}
+		function showParty(code, created) {
+			activeParty = code.toUpperCase();
+			partyCode.hidden = false;
+			partyCode.textContent = activeParty;
+			partyInput.value = activeParty;
+			shareRow.classList.add('visible');
+			partyStatus.textContent = created ? `Party ${activeParty} created. Share the invite with your friends.` : `Joined party ${activeParty}. Everyone must use the same invite.`;
+			document.getElementById('rivalLabel').textContent = `Party ${activeParty} lobby`; 
+		}
+		document.getElementById('createParty').addEventListener('click', () => showParty(makePartyCode(), true));
+		document.getElementById('joinParty').addEventListener('click', () => {
+			const code = partyInput.value.trim().replace(/[^a-z0-9]/gi, '').slice(0, 6);
+			if (code.length < 4) { partyStatus.textContent = 'Enter a valid party code first.'; return; }
+			showParty(code, false);
+		});
+		document.getElementById('copyParty').addEventListener('click', async () => {
+			if (!activeParty) return;
+			const invite = `Join my Battle Burst party: ${activeParty}\n${partyInvite()}`;
+			try { await navigator.clipboard.writeText(invite); partyStatus.textContent = 'Invite copied. Paste it into WhatsApp, Instagram or Snapchat.'; }
+			catch (error) { partyStatus.textContent = `Share code ${activeParty}: ${partyInvite()}`; }
+		});
+		document.getElementById('whatsappParty').addEventListener('click', () => window.open(`https://wa.me/?text=${encodeURIComponent(`Join my Battle Burst party: ${activeParty} ${partyInvite()}`)}`, '_blank', 'noopener'));
+		document.getElementById('instagramParty').addEventListener('click', async () => {
+			if (navigator.share) await navigator.share({ title: 'Battle Burst party', text: `Join party ${activeParty}`, url: partyInvite() });
+			else { await navigator.clipboard.writeText(`Join party ${activeParty}: ${partyInvite()}`); partyStatus.textContent = 'Instagram does not provide a public web share composer. Invite copied to your clipboard.'; }
+		});
+		document.getElementById('snapchatParty').addEventListener('click', async () => {
+			if (navigator.share) await navigator.share({ title: 'Battle Burst party', text: `Join party ${activeParty}`, url: partyInvite() });
+			else { await navigator.clipboard.writeText(`Join party ${activeParty}: ${partyInvite()}`); partyStatus.textContent = 'Snapchat invite copied to your clipboard.'; }
+		});
+		const linkedParty = new URLSearchParams(location.hash.replace('#', '?')).get('party');
+		if (linkedParty) showParty(linkedParty, false);
+		const cameraVideo = document.getElementById('cameraVideo');
+		const cameraFrame = document.getElementById('cameraFrame');
+		const cameraStatus = document.getElementById('cameraStatus');
+		const startCamera = document.getElementById('startCamera');
+		const stopCamera = document.getElementById('stopCamera');
+		let cameraStream;
+		let handTracker;
+		let cameraScanId;
+		let stableGesture = '';
+		let stableFrames = 0;
+		let lastCameraRound = 0;
+		function recognizeSign(landmarks) {
+			const extended = [8, 12, 16, 20].map(tip => landmarks[tip].y < landmarks[tip - 2].y);
+			const fingersUp = extended.filter(Boolean).length;
+			if (fingersUp === 0) return 'rock';
+			if (fingersUp === 4) return 'paper';
+			if (extended[0] && extended[1] && !extended[2] && !extended[3]) return 'scissors';
+			return '';
+		}
+		function handleHandResults(results) {
+			const gesture = results.multiHandLandmarks && results.multiHandLandmarks[0] ? recognizeSign(results.multiHandLandmarks[0]) : '';
+			if (!gesture) { stableGesture = ''; stableFrames = 0; return; }
+			if (gesture === stableGesture) stableFrames++;
+			else { stableGesture = gesture; stableFrames = 1; }
+			cameraStatus.textContent = `Camera sign: ${labels[gesture]} (${stableFrames}/5)`;
+			if (stableFrames >= 5 && Date.now() - lastCameraRound > 1600) {
+				lastCameraRound = Date.now();
+				playRound(gesture);
+				stableFrames = 0;
+				cameraStatus.textContent = `Played ${labels[gesture]} from camera sign.`;
+			}
+		}
+		async function scanCamera() {
+			if (cameraStream && handTracker && cameraVideo.readyState >= 2) await handTracker.send({ image: cameraVideo });
+			if (cameraStream) cameraScanId = requestAnimationFrame(scanCamera);
+		}
+		startCamera.addEventListener('click', async () => {
+			if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+				cameraStatus.textContent = 'Camera access needs HTTPS or localhost.';
+				return;
+			}
+			try {
+				cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+				cameraVideo.srcObject = cameraStream;
+				if (typeof Hands === 'undefined') {
+					cameraStatus.textContent = 'Camera is live, but hand recognition is unavailable.';
+				} else {
+					handTracker = new Hands({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+					handTracker.setOptions({ maxNumHands: 1, modelComplexity: 0, minDetectionConfidence: .7, minTrackingConfidence: .6 });
+					handTracker.onResults(handleHandResults);
+				}
+				cameraFrame.classList.add('active');
+				startCamera.disabled = true;
+				stopCamera.disabled = false;
+				cameraStatus.textContent = typeof Hands === 'undefined' ? 'Camera live.' : 'Open hand = Paper | Closed fingers = Rock | V sign = Scissors';
+				scanCamera();
+			} catch (error) {
+				cameraStatus.textContent = 'Camera permission was not granted.';
+			}
+		});
+		stopCamera.addEventListener('click', () => {
+			if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+			if (cameraScanId) cancelAnimationFrame(cameraScanId);
+			cameraVideo.srcObject = null;
+			cameraFrame.classList.remove('active');
+			stableGesture = ''; stableFrames = 0;
+			startCamera.disabled = false;
+			stopCamera.disabled = true;
+			cameraStatus.textContent = 'Camera is off.';
+		});
+		window.addEventListener('beforeunload', () => {
+			if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+			if (cameraScanId) cancelAnimationFrame(cameraScanId);
+		});
+	</script>
+</body>
+</html>
